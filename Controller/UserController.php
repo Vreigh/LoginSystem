@@ -10,30 +10,37 @@ class UserController {
     
     public function __construct() {
         if(!User::isAuth()){
-            header(UriManager::getHeader(''));
+            UriManager::redirect('');
+        }else if(!User::isAdmin()){
+            echo "Widok nieuprzywilejowanego użytkownika";
             die();
         }
     }
     
-    public function get(){
+    public function index(){
         echo "get";
+        // wylistuj uzytkownikow
     }
     
-    public function post(){
-       echo "post"; 
+    public function edit(){
+        // wyswietl formularz uzytkownika
     }
     
-    public function put(){
-        echo "put";
+    public function update(){
+       echo "post";
+       // walidacja. Wszystko ok - update.
+    }
+    
+    public function create(){
+        // niemal identycznie jak przy rejestracji
     }
     
     public function delete(){
-        echo "delete";
+       // sprawdz, czy nie usuwam sam siebie
     }
     
     public function logout(){
         unset($_SESSION['id']);
-        header(UriManager::getHeader(''));
-        die();
+        UriManager::redirect('');
     }
 }

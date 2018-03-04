@@ -17,7 +17,12 @@ class UriManager {
         return self::$root . $target;
     }
     
-    public static function getHeader($target){
+    private static function getHeader($target){
         return 'Location: ' . self::getUrl($target);
+    }
+    
+    public static function redirect($target){
+        header(self::getHeader($target));
+        die();
     }
 }

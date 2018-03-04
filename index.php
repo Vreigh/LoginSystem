@@ -41,7 +41,7 @@ if(($uri == '') || ($uri == 'register')){
     $controller = new UserController();
 
     if(($method == "GET") && ($uri == "users")){
-        $controller->get();
+        $controller->index();
     }else if(($method == "POST") && ($uri == "users")){
         $controller->post();
     }else if(($method == "PUT") && ($uri == "users")){
