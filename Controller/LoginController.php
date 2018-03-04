@@ -43,7 +43,7 @@ class LoginController {
         
         if(empty($errors)){
             $id = User::login($validated['login_email'], $validated['login_password']);
-            $id != null ? '' : $errors['login_general'] = "Email and Password don't match";
+            $id != null ? '' : $errors['login_general'] = "Wrong email or password";
         }
         
         if(empty($errors)){
@@ -95,10 +95,11 @@ class LoginController {
         }
         
         if(empty($errors)){
-            $validated['password'] = $validated['password']; // tutaj hashowanie
+            $origPass = $validated['password'];
+            $validated['password'] = password_hash($validated['password'], PASSWORD_DEFAULT); // tutaj hashowanie
             $user = new User($validated);
             $user->save();
-            User::login($validated['email'], $validated['password']);
+            User::login($validated['email'], $origPass);
             UriManager::redirect('users');
         }else{
             $old = $data;

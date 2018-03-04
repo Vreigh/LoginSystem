@@ -12,8 +12,8 @@ class UserController {
         if(!User::isAuth()){
             UriManager::redirect('');
         }else if(!User::isAdmin()){
-            echo "Widok nieuprzywilejowanego użytkownika"; //dziala
-            $this->logout();
+            //echo "Widok nieuprzywilejowanego użytkownika"; //dziala
+            //$this->logout();
         }
     }
     

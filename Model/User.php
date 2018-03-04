@@ -100,11 +100,18 @@ class User extends Model
     }
     
     public function login($email, $password){
-        $result = DB::query("SELECT id FROM " . self::getTableName() . " WHERE email = :email AND password = :password", array('email' => $email, 'password' => $password));
+        $id = null;
+        
+        $result = DB::query("SELECT id, password FROM " . self::getTableName() . " WHERE email = :email", array('email' => $email));
         $result = $result->fetch();
-        if($result == null) return null;
-        $id = (int)$result['id'];
-        $_SESSION['id'] = $id;
+        
+        if($result != null){
+            if(password_verify($password, $result['password'])){
+                $id = (int)$result['id'];
+                $_SESSION['id'] = $id;
+            }
+        }
+        
         return $id;
     }
 }
