@@ -11,5 +11,5 @@ class DB {
     
     public static function query($command, $params){
         return self::$db->query($command, $params);
-    }  
+    }
 }

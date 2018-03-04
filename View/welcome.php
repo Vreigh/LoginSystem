@@ -7,10 +7,10 @@
                         <div class="panel-heading">
                                 <div class="row">
                                         <div class="col-xs-6">
-                                                <a href="#" class="active" id="login-form-link">Login</a>
+                                                <a href="#" <?php isset($hideLogin) ? '' : print("class=\"active\"")?> id="login-form-link">Login</a>
                                         </div>
                                         <div class="col-xs-6">
-                                                <a href="#" id="register-form-link">Register</a>
+                                                <a href="#" <?php isset($hideRegister) ? '' : print("class=\"active\"")?> id="register-form-link">Register</a>
                                         </div>
                                 </div>
                                 <hr>

@@ -21,10 +21,6 @@ class DBMySQL implements IDatabase
         if($build) $this->buildTables();
     }
     
-    private function buildTables(){
-        $this->query(User::getTableCreateString());
-    }
-    
     public function query($sql, $params = null){
         if($params == null){
             return $this->pdo->query($sql);
@@ -33,5 +29,9 @@ class DBMySQL implements IDatabase
             $result->execute($params);
             return $result;
         }
-    }  
+    }
+    
+    private function buildTables(){
+        $this->query(User::getTableCreateString());
+    }
 }

@@ -17,53 +17,92 @@ class LoginController {
     
     public function get(){
         $userFormAction = UriManager::getUrl('register');
+        $hideRegister = true;
         include("View/welcome.php");
     }
     
     public function login(){
         $userFormAction = UriManager::getUrl('register');
+        $hideRegister = true;
+        
+        $data = array(
+            'login_email' => $_POST['login_email'],
+            'login_password' => $_POST['login_password']
+        );
         
         $gump = new GUMP();
-        $_POST = $gump->sanitize($_POST);
+        $data = $gump->sanitize($data);
         
         $gump->validation_rules(array(
                 'login_email'    => 'required|valid_email',
                 'login_password'    => 'required',
         ));
         
-        $validated = $gump->run($_POST);
+        $validated = $gump->run($data);
         $errors = $gump->get_errors_array();
         
         if(empty($errors)){
             $id = User::login($validated['login_email'], $validated['login_password']);
-            $id != null ? $_SESSION['id'] = $id : $errors['login_general'] = "Email and Password don't match";
+            $id != null ? '' : $errors['login_general'] = "Email and Password don't match";
         }
         
         if(empty($errors)){
             UriManager::redirect('users');
         }else{
-            $old['login_email'] = $_POST['login_email'];
+            $old = $data;
             include("View/welcome.php"); 
         }
     }
     
     public function register(){
+        $userFormAction = UriManager::getUrl('register');
+        $hideLogin = true;
+        
+        $data = array(
+            'name' => $_POST['name'],
+            'surname' => $_POST['surname'],
+            'address' => $_POST['address'],
+            'password' => $_POST['password'],
+            'password_confirm' => $_POST['password_confirm'],
+            'email' => $_POST['email']
+        );
+        
         $gump = new GUMP();
-        $_POST = $gump->sanitize($_POST);
+        $data = $gump->sanitize($data);
         
         $gump->validation_rules(array(
-                'name'    => 'required|alpha_numeric|max_len,40|min_len,2',
-                'surname'    => 'required|max_len,50|min_len,2',
+                'name'    => 'required|alpha_dash|max_len,40|min_len,2',
+                'surname'    => 'required|alpha_dash|max_len,50|min_len,2',
                 'address'       => 'required|max_len,40|min_len,2',
                 'password'      => 'required|max_len,50|min_len,6',
+                'password_confirm'      => 'required|max_len,50|min_len,6',
                 'email' => 'required|valid_email'
         ));
 
-        $validated_data = $gump->run($_POST);
+        $validated = $gump->run($data);
+        $errors = $gump->get_errors_array();
         
-        var_dump($gump->get_errors_array()); 
-        // sprawdz, czy istnieje juz uzytkownik o podanym mailu - jesli tak, dodaj do errorow
-        // sprawdz, czy zostalo cos wpisane przy tajnym hasle
-        // dane poprawne - utworz usera i zapisz
+        if($validated['password'] !== $validated['password_confirm']){
+            $errors['password_confirm'] = 'Passwords dont match!';
+        }
+        
+        if(empty($errors)){
+            $result = \Database\DB::query('SELECT COUNT(*) FROM ' . User::getTableName() . ' WHERE email = :email', array('email' => $validated['email']));
+            $result = $result->fetch();
+            if((int)$result[0] > 0){
+                $errors['email'] = 'This email address is already taken';
+            }
+        }
+        
+        if(empty($errors)){
+            $validated['password'] = $validated['password']; // tutaj hashowanie
+            $user = new User($validated);
+            $user->save();
+            User::login($validated['email'], $validated['password']);
+            UriManager::redirect('users');
+        }else{
+            $old = $data;
+            include('View/welcome.php');
+        }
     }
 }

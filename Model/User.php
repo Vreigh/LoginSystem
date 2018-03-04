@@ -13,7 +13,7 @@ class User extends Model
     private $email;
     private $is_admin;
     
-    public function getTableName(){
+    public static function getTableName(){
         return "users";
     }
 
@@ -64,7 +64,7 @@ class User extends Model
         $sql .= " surname VARCHAR(50) NOT NULL,";
         $sql .= " address VARCHAR(50) NOT NULL,";
         $sql .= " password VARCHAR(100) NOT NULL,";
-        $sql .= " email VARCHAR(60) NOT NULL,";
+        $sql .= " email VARCHAR(60) NOT NULL UNIQUE,";
         $sql .= " is_admin TINYINT(1) NOT NULL";
         $sql .= ")";
         return $sql;
@@ -103,6 +103,8 @@ class User extends Model
         $result = DB::query("SELECT id FROM " . self::getTableName() . " WHERE email = :email AND password = :password", array('email' => $email, 'password' => $password));
         $result = $result->fetch();
         if($result == null) return null;
-        return (int)$result['id'];
+        $id = (int)$result['id'];
+        $_SESSION['id'] = $id;
+        return $id;
     }
 }

@@ -17,7 +17,7 @@ abstract class Model
         $this->fill($array);
     }
     
-    public abstract function getTableName();
+    public static abstract function getTableName();
 
     protected abstract function fill($array);
     

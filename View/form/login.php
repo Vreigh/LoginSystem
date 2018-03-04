@@ -1,4 +1,4 @@
-<form id="login-form" action="<?php echo \Helpers\UriManager::getUrl(''); ?>" method="post" role="form" style="display: block;">
+<form id="login-form" action="<?php echo \Helpers\UriManager::getUrl(''); ?>" method="post" role="form" style="<?php isset($hideLogin) ? print("display: none;") : print("display: block;")?>">
     <div class="form-group">
             <input type="email" name="login_email" id="login_email" tabindex="1" class="form-control" placeholder="Email" value="<?php if(isset($old['login_email'])) echo $old['login_email']; ?>">
     </div>

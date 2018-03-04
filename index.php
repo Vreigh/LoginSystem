@@ -9,7 +9,7 @@ use Controller\UserController;
 use Helpers\UriManager;
 
 
-$dbMySQL = new DBMySQL(include("config.php"), true);
+$dbMySQL = new DBMySQL(include("config.php"));
 DB::set($dbMySQL);
 
 $root = "/php/LoginSystem/";
@@ -23,8 +23,8 @@ $user = new User($array);
 $user->save();
 
 $user = User::getByID(5);
-var_dump($user);
-*/
+var_dump("end");*/
+
 session_start();
 
 if(($uri == '') || ($uri == 'register')){
@@ -36,7 +36,7 @@ if(($uri == '') || ($uri == 'register')){
         $controller->login();
     }else if(($method == "POST") && ($uri == 'register')){
         $controller->register();
-    }
+    }else echo "Sorry, bad request!";
 }else if(($uri == 'users') || ($uri == 'users/logout')){
     $controller = new UserController();
 
@@ -50,7 +50,7 @@ if(($uri == '') || ($uri == 'register')){
         $controller->delete();
     }else if(($method == "GET") && ($uri == "users/logout")){
         $controller->logout();
-    }
+    }else echo "Sorry, bad request!";
 }else{
     echo "Sorry, bad request!";
 }
