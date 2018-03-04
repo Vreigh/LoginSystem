@@ -87,5 +87,10 @@ class User extends Model
         return new self($result, (int)$result['id']);
     }
     
-    
+    public function login($email, $password){
+        $result = DB::query("SELECT id FROM " . self::getTableName() . " WHERE email = \"$email\" AND password = \"$password\"");
+        $result = $result->fetch();
+        if($result == null) return null;
+        return (int)$result['id'];
+    }
 }

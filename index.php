@@ -6,43 +6,47 @@ use Database\DBMySQL;
 use Model\User;
 use Controller\LoginController;
 use Controller\UserController;
+use Helpers\UriManager;
 
 
 $dbMySQL = new DBMySQL(include("config.php"), true);
 DB::set($dbMySQL);
 
 $root = "/php/LoginSystem/";
-$uri = str_replace($root, '', filter_input(INPUT_SERVER, 'REQUEST_URI', FILTER_SANITIZE_STRING));
+UriManager::prepare($root);
+$uri = UriManager::getrequestUri();
 $method = filter_input(INPUT_SERVER, 'REQUEST_METHOD');
-
 
 
 /*$array = ['name' => "Adam", "surname" => "Jabik", "address" => "exampleAddress", "email" => "ExampleEmail", "password" => "password", 'is_admin' => true];
 $user = new User($array);
 $user->save();*/
 
-
 session_start();
 
-if($uri == ''){
-    $controller = new LoginController($root . 'users');
+if(($uri == '') || ($uri == 'register')){
+    $controller = new LoginController();
     
-    if($method == "GET"){
+    if(($method == "GET") && ($uri == '')){
         $controller->get();
-    }else if($method == "POST"){
-        $controller->post();
+    }else if(($method == "POST") && ($uri == '')){
+        $controller->login();
+    }else if(($method == "POST") && ($uri == 'register')){
+        $controller->register();
     }
-}else if($uri == 'users'){
-    $controller = new UserController($root);
+}else if(($uri == 'users') || ($uri == 'users/logout')){
+    $controller = new UserController();
 
-    if($method == "GET"){
+    if(($method == "GET") && ($uri == "users")){
         $controller->get();
-    }else if($method == "POST"){
+    }else if(($method == "POST") && ($uri == "users")){
         $controller->post();
-    }else if($method == "PUT"){
+    }else if(($method == "PUT") && ($uri == "users")){
         $controller->put();
-    }else if($method == "DELETE"){
+    }else if(($method == "DELETE") && ($uri == "users")){
         $controller->delete();
+    }else if(($method == "GET") && ($uri == "users/logout")){
+        $controller->logout();
     }
 }else{
     echo "Sorry, bad request!";

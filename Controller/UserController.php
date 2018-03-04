@@ -3,12 +3,14 @@
 namespace Controller;
 
 use Model\User;
+use Helpers\UriManager;
+use Helpers\Helper;
 
 class UserController {
     
-    public function __construct($redirect) {
+    public function __construct() {
         if(!User::isAuth()){
-            header('Location: ' . $redirect);
+            header(UriManager::getHeader(''));
             die();
         }
     }
@@ -27,5 +29,11 @@ class UserController {
     
     public function delete(){
         echo "delete";
+    }
+    
+    public function logout(){
+        unset($_SESSION['id']);
+        header(UriManager::getHeader(''));
+        die();
     }
 }
