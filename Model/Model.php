@@ -26,12 +26,16 @@ abstract class Model
     protected abstract function getUpdateSql();
 
     public abstract static function getTableCreateString();
+    
+    public abstract function asArray();
 
     public function save(){
         if($this->id == null){
-            DB::query($this->getInsertSql());
+            $params = $this->asArray();
+            unset($params['id']);
+            DB::query($this->getInsertSql(), $params);
         }else{
-            DB::query($this->getUpdateSql());
+            DB::query($this->getUpdateSql(), $this->asArray());
         }
     }
 }

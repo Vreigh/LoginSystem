@@ -18,10 +18,13 @@ $uri = UriManager::getrequestUri();
 $method = filter_input(INPUT_SERVER, 'REQUEST_METHOD');
 
 
-/*$array = ['name' => "Adam", "surname" => "Jabik", "address" => "exampleAddress", "email" => "ExampleEmail", "password" => "password", 'is_admin' => true];
+/*$array = ['name' => "Jerzy", "surname" => "Jabik", "address" => "exampleAddress", "email" => "ExampleEmail", "password" => "password", 'is_admin' => true];
 $user = new User($array);
-$user->save();*/
+$user->save();
 
+$user = User::getByID(5);
+var_dump($user);
+*/
 session_start();
 
 if(($uri == '') || ($uri == 'register')){

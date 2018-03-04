@@ -26,22 +26,34 @@ class User extends Model
         $this->is_admin = (int)$array['is_admin'];
     }
     
+    public function asArray(){
+        return array(
+            'id' => $this->id,
+            'name' => $this->name,
+            'surname' => $this->surname,
+            'address' => $this->address,
+            'password' => $this->password,
+            'email' => $this->email,
+            'is_admin' => $this->is_admin
+        );
+    }
+    
     protected function getInsertSql(){
         $sql = "INSERT INTO " . self::getTableName();
         $sql .= " (name, surname, address, password, email, is_admin) ";
-        $sql .= "VALUES ( \"$this->name\", \"$this->surname\", \"$this->address\", \"$this->password\", \"$this->email\", \"$this->is_admin\")";
+        $sql .= "VALUES ( :name, :surname, :address, :password, :email, :is_admin)";
         return $sql;
     }
     
     protected function getUpdateSql(){
         $sql = "UPDATE " . self::getTableName() .  " SET ";
-        $sql .= " name = \"$this->name\"";
-        $sql .= ", surname = \"$this->surname\"";
-        $sql .= ", address = \"$this->address\"";
-        $sql .= ", password = \"$this->password\"";
-        $sql .= ", email = \"$this->email\"";
-        $sql .= ", is_admin = \"$this->is_admin\"";
-        $sql .= " WHERE id = \"$this->id\"";
+        $sql .= " name = :name";
+        $sql .= ", surname = :surname";
+        $sql .= ", address = :address";
+        $sql .= ", password = :password";
+        $sql .= ", email = :email";
+        $sql .= ", is_admin = :is_admin";
+        $sql .= " WHERE id = :id";
         return $sql;
     }
     
@@ -81,14 +93,14 @@ class User extends Model
     }
     
     public static function getByID($id){
-        $result = DB::query("SELECT * FROM " . self::getTableName() . " WHERE id = $id");
+        $result = DB::query("SELECT * FROM " . self::getTableName() . " WHERE id = :id", array('id' => $id));
         $result = $result->fetch();
         if($result == null) return null;
         return new self($result, (int)$result['id']);
     }
     
     public function login($email, $password){
-        $result = DB::query("SELECT id FROM " . self::getTableName() . " WHERE email = \"$email\" AND password = \"$password\"");
+        $result = DB::query("SELECT id FROM " . self::getTableName() . " WHERE email = :email AND password = :password", array('email' => $email, 'password' => $password));
         $result = $result->fetch();
         if($result == null) return null;
         return (int)$result['id'];

@@ -25,7 +25,13 @@ class DBMySQL implements IDatabase
         $this->query(User::getTableCreateString());
     }
     
-    public function query($sql){
-        return $this->pdo->query($sql); // TO DO: dodac usuwanie sql injection itd
+    public function query($sql, $params = null){
+        if($params == null){
+            return $this->pdo->query($sql);
+        }else{
+            $result = $this->pdo->prepare($sql);
+            $result->execute($params);
+            return $result;
+        }
     }  
 }

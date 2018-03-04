@@ -3,5 +3,5 @@
 namespace Database;
 
 interface IDatabase {
-    public function query($command);
+    public function query($command, $params);
 }
