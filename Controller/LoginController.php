@@ -71,8 +71,8 @@ class LoginController {
         $data = $gump->sanitize($data);
         
         $gump->validation_rules(array(
-                'name'    => 'required|alpha_dash|max_len,40|min_len,2',
-                'surname'    => 'required|alpha_dash|max_len,50|min_len,2',
+                'name'    => 'required|max_len,40|min_len,2',
+                'surname'    => 'required|max_len,50|min_len,2',
                 'address'       => 'required|max_len,40|min_len,2',
                 'password'      => 'required|max_len,50|min_len,6',
                 'password_confirm'      => 'required|max_len,50|min_len,6',
@@ -96,7 +96,7 @@ class LoginController {
         
         if(empty($errors)){
             $origPass = $validated['password'];
-            $validated['password'] = password_hash($validated['password'], PASSWORD_DEFAULT); // tutaj hashowanie
+            $validated['password'] = User::hash($validated['password']);
             $user = new User($validated);
             $user->save();
             User::login($validated['email'], $origPass);

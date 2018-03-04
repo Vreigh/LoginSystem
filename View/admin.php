@@ -1,6 +1,4 @@
 <?php include("header.php")?>
-<h1>Zalogowano!</h1>
+<h1>Index admina</h1>
 <?php include("footer.php")?>
-
-
 

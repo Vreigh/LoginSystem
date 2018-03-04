@@ -12,4 +12,8 @@ class DB {
     public static function query($command, $params){
         return self::$db->query($command, $params);
     }
+    
+    public static function seed(){
+        return self::$db->seed();
+    }
 }

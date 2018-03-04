@@ -11,15 +11,15 @@ class UserController {
     public function __construct() {
         if(!User::isAuth()){
             UriManager::redirect('');
-        }else if(!User::isAdmin()){
-            //echo "Widok nieuprzywilejowanego użytkownika"; //dziala
-            //$this->logout();
         }
     }
     
     public function index(){
-        echo "get";
-        // wylistuj uzytkownikow
+        if(!User::isAdmin()){
+            include("View/nonadmin.php");
+        }else{
+            include("View/admin.php");
+        }
     }
     
     public function edit(){

@@ -12,4 +12,5 @@
 </head>
 
 <body>
+    <?php \Model\User::isAuth() ? print("<a href= \"" . \Helpers\UriManager::getUrl('users/logout') . "\">Wyloguj</a>") : "" ?>
 

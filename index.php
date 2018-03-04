@@ -9,8 +9,9 @@ use Controller\UserController;
 use Helpers\UriManager;
 
 
-$dbMySQL = new DBMySQL(include("config.php"));
+$dbMySQL = new DBMySQL(include("config.php"), true);
 DB::set($dbMySQL);
+DB::seed();
 
 $root = "/php/LoginSystem/";
 UriManager::prepare($root);
