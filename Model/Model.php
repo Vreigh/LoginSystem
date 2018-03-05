@@ -25,7 +25,7 @@ abstract class Model
     
     protected abstract function getUpdateSql();
 
-    public abstract static function getTableCreateString();
+    public abstract static function getTableCreateSql();
     
     public abstract function asArray();
 
