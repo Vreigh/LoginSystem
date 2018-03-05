@@ -13,9 +13,11 @@
 
 <body>
     <div class="container">
-        <button type="button" class="btn btn-info">
-            <a href="<?php print(\Helpers\UriManager::getUrl('users/logout')) ?>" class="button-link" style="<?php if(!\Model\User::isAuth()) print("display: none;")?>"><h5>Log out</h5></a>
-        </button>
+        <a href="<?php print(\Helpers\UriManager::getUrl('users/logout')) ?>" class="button-link">
+            <button type="button" class="btn btn-info" style="<?php if(!\Model\User::isAuth()) print("display: none;")?>">
+                <h5>Log out</h5>
+            </button>
+        </a>
     </div>
     <div style="margin-top: 30px;"></div>
     
