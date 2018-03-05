@@ -64,6 +64,7 @@ class LoginController {
         if(empty($errors)){
             $origPass = $validated['password'];
             $validated['password'] = User::hash($validated['password']);
+            $validated['is_admin'] = 0;
             $user = new User($validated);
             $user->save();
             User::login($validated['email'], $origPass);

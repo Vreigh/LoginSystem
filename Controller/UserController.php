@@ -27,7 +27,7 @@ class UserController {
     }
     
     public function edit(){
-       $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_SPECIAL_CHARS);
+       $id = (int)filter_input(INPUT_GET, 'id', FILTER_SANITIZE_SPECIAL_CHARS);
        if(!$id){
            UriManager::redirect('users');
        }
@@ -36,13 +36,12 @@ class UserController {
            UriManager::redirect('users');
        }
        
-       $userFormAction = UriManager::getUrl('user?id=' . $id);
        $old = $user->asArray();
        include("View/admin/edit.php");
     }
     
     public function update(){
-       $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_SPECIAL_CHARS);
+       $id = (int)filter_input(INPUT_GET, 'id', FILTER_SANITIZE_SPECIAL_CHARS);
        if(!$id){
            UriManager::redirect('users');
        }
@@ -51,19 +50,90 @@ class UserController {
            UriManager::redirect('users');
        }
        
-       echo "TO DO"; // walidacja update (recznie)
+       $data = array(
+            'name' => $_POST['name'],
+            'surname' => $_POST['surname'],
+            'address' => $_POST['address'],
+            'password' => $_POST['password'],
+            'password_confirm' => $_POST['password_confirm'],
+            'email' => $_POST['email']
+        );
+        
+        $gump = new GUMP();
+        $data = $gump->sanitize($data);
+        
+        $gump->validation_rules(array(
+                'name'    => 'required|max_len,40|min_len,2',
+                'surname'    => 'required|max_len,50|min_len,2',
+                'address'       => 'required|max_len,40|min_len,2',
+                'password'      => 'max_len,50|min_len,6',
+                'password_confirm'      => 'max_len,50|min_len,6',
+                'email' => 'required|valid_email'
+        ));
+
+        $validated = $gump->run($data);
+        $errors = $gump->get_errors_array();
+        
+        if($validated['password'] !== $validated['password_confirm']){
+            $errors['password_confirm'] = 'Passwords dont match!';
+        }
+        
+        $userData = $user->asArray();
+        
+        if(empty($errors)){
+            if($validated['email'] != $userData['email']){
+                $result = \Database\DB::query('SELECT COUNT(*) FROM ' . User::getTableName() . ' WHERE email = :email', array('email' => $validated['email']));
+                $result = $result->fetch();
+                if((int)$result[0] > 0){
+                    $errors['email'] = 'This new email address is already taken';
+                }
+            }
+        }
+        
+        if(empty($errors)){
+            if(!empty($validated['password'])){
+               $origPass = $validated['password'];
+               $validated['password'] = User::hash($validated['password']); 
+            }else $validated['password'] = $userData['password'];
+            
+            if($id != $_SESSION['id']){
+                empty($_POST['is_admin']) ? $validated['is_admin'] = 0 : $validated['is_admin'] = 1;
+            }else $validated['is_admin'] = $userData['is_admin'];
+            
+            $user->update($validated);
+            $user->save();
+            UriManager::redirect('users');
+        }else{
+            $old = $data;
+            include("View/admin/edit.php");
+        }
     }
     
     public function create(){
-        echo "create";
+        include("View/admin/create.php");  // czemu tu widok sie sypie?
     }
     
     public function post(){
-        // TO DO
+        $result = self::tryCreate();
+        $errors = $result['errors'];
+        $validated = $result['validated'];
+        $data = $result['data'];
+        
+        if(empty($errors)){
+            $origPass = $validated['password'];
+            $validated['password'] = User::hash($validated['password']);
+            empty($_POST['is_admin']) ? $validated['is_admin'] = 0 : $validated['is_admin'] = 1;
+            $user = new User($validated);
+            $user->save();
+            UriManager::redirect('users');
+        }else{
+            $old = $data;
+            include("View/admin/create.php");
+        }
     }
     
     public function delete(){
-       $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_SPECIAL_CHARS);
+       (int)$id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_SPECIAL_CHARS);
        if(!$id || ($id == $_SESSION['id'])){
            UriManager::redirect('users');
        }
@@ -72,7 +142,8 @@ class UserController {
            UriManager::redirect('users');
        }
        
-       //$user->delete();
+       $user->delete();
+       UriManager::redirect('users');
     }
     
     public function logout(){

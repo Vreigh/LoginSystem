@@ -39,14 +39,14 @@ class User extends Model
     }
     
     protected function getInsertSql(){
-        $sql = "INSERT INTO " . self::getTableName();
+        $sql = "INSERT INTO " . $this->getTableName();
         $sql .= " (name, surname, address, password, email, is_admin) ";
         $sql .= "VALUES ( :name, :surname, :address, :password, :email, :is_admin)";
         return $sql;
     }
     
     protected function getUpdateSql(){
-        $sql = "UPDATE " . self::getTableName() .  " SET ";
+        $sql = "UPDATE " . $this->getTableName() .  " SET ";
         $sql .= " name = :name";
         $sql .= ", surname = :surname";
         $sql .= ", address = :address";
@@ -92,17 +92,10 @@ class User extends Model
         
     }
     
-    public static function getByID($id){
-        $result = DB::query("SELECT * FROM " . self::getTableName() . " WHERE id = :id", array('id' => $id));
-        $result = $result->fetch();
-        if($result == null) return null;
-        return new self($result, (int)$result['id']);
-    }
-    
     public function login($email, $password){
         $id = null;
         
-        $result = DB::query("SELECT id, password FROM " . self::getTableName() . " WHERE email = :email", array('email' => $email));
+        $result = DB::query("SELECT id, password FROM " . $this->getTableName() . " WHERE email = :email", array('email' => $email));
         $result = $result->fetch();
         
         if($result != null){
@@ -117,5 +110,12 @@ class User extends Model
     
     public static function hash($password){
         return password_hash($password, PASSWORD_DEFAULT);
+    }
+    
+    public static function getByID($id){
+        $result = DB::query("SELECT * FROM " . self::getTableName() . " WHERE id = :id", array('id' => $id));
+        $result = $result->fetch();
+        if($result == null) return null;
+        return new self($result, (int)$result['id']);
     }
 }

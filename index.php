@@ -40,12 +40,12 @@ if(($uri == '') || ($uri == 'register')){
         $controller->index();
     }else if(($method == "GET") && ($uri == "user")){
         $controller->edit();
+    }else if(($method == "POST") && ($uri == "user")){
+        $controller->update();
     }else if(($method == "GET") && ($uri == "user/create")){
         $controller->create();
     }else if(($method == "POST") && ($uri == "user/create")){
         $controller->post();
-    }else if(($method == "POST") && ($uri == "user")){
-        $controller->update();
     }else if(($method == "GET") && ($uri == "user/delete")){
         $controller->delete();
     }else if(($method == "GET") && ($uri == "users/logout")){

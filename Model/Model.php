@@ -38,4 +38,10 @@ abstract class Model
             DB::query($this->getUpdateSql(), $this->asArray());
         }
     }
+    
+    public function delete(){
+        if($this->id != null){
+           DB::query("DELETE FROM " . $this->getTableName() . " WHERE id = :id", array('id' => $this->id)); 
+        }
+    }
 }
