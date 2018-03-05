@@ -9,7 +9,7 @@ class DB {
         self::$db = $db;
     }
     
-    public static function query($command, $params){
+    public static function query($command, $params = null){
         return self::$db->query($command, $params);
     }
     

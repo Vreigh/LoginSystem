@@ -5,6 +5,7 @@ namespace Controller;
 use Model\User;
 use Helpers\UriManager;
 use Helpers\Helper;
+use Database\DB;
 
 class UserController {
     
@@ -16,27 +17,32 @@ class UserController {
     
     public function index(){
         if(!User::isAdmin()){
-            include("View/nonadmin.php");
+            include("View/index.php");
         }else{
-            include("View/admin.php");
+            $users = DB::query("SELECT * FROM " . User::getTableName());
+            $users = $users->fetchAll();
+            include("View/admin/index.php");
         }
     }
     
     public function edit(){
-        // wyswietl formularz uzytkownika
+       echo "edit " . $_GET['id'];
     }
     
     public function update(){
-       echo "post";
        // walidacja. Wszystko ok - update.
     }
     
     public function create(){
-        // niemal identycznie jak przy rejestracji
+        echo "create";
+    }
+    
+    public function post(){
+        // TO DO
     }
     
     public function delete(){
-       // sprawdz, czy nie usuwam sam siebie
+       echo "delete " . $_GET['id'];
     }
     
     public function logout(){

@@ -15,16 +15,10 @@ DB::seed();
 
 $root = "/php/LoginSystem/";
 UriManager::prepare($root);
-$uri = UriManager::getrequestUri();
+$fullUri = UriManager::getrequestUri();
+$fullUri = explode("?", $fullUri, 2);
+$uri = $fullUri[0];
 $method = filter_input(INPUT_SERVER, 'REQUEST_METHOD');
-
-
-/*$array = ['name' => "Jerzy", "surname" => "Jabik", "address" => "exampleAddress", "email" => "ExampleEmail", "password" => "password", 'is_admin' => true];
-$user = new User($array);
-$user->save();
-
-$user = User::getByID(5);
-var_dump("end");*/
 
 session_start();
 
@@ -38,16 +32,21 @@ if(($uri == '') || ($uri == 'register')){
     }else if(($method == "POST") && ($uri == 'register')){
         $controller->register();
     }else echo "Sorry, bad request!";
-}else if(($uri == 'users') || ($uri == 'users/logout')){
+}else if(($uri == 'users') || ($uri == 'user') || ($uri == 'user/create') || 
+        ($uri == 'users/logout') || ($uri == 'user/delete')){
     $controller = new UserController();
 
     if(($method == "GET") && ($uri == "users")){
         $controller->index();
-    }else if(($method == "POST") && ($uri == "users")){
+    }else if(($method == "GET") && ($uri == "user")){
+        $controller->edit();
+    }else if(($method == "GET") && ($uri == "user/create")){
+        $controller->create();
+    }else if(($method == "POST") && ($uri == "user/create")){
         $controller->post();
-    }else if(($method == "PUT") && ($uri == "users")){
-        $controller->put();
-    }else if(($method == "DELETE") && ($uri == "users")){
+    }else if(($method == "POST") && ($uri == "user")){
+        $controller->update();
+    }else if(($method == "GET") && ($uri == "user/delete")){
         $controller->delete();
     }else if(($method == "GET") && ($uri == "users/logout")){
         $controller->logout();
