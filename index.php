@@ -3,13 +3,12 @@ include('load.php');
 
 use Database\DB;
 use Database\DBMySQL;
-use Model\User;
 use Controller\LoginController;
 use Controller\UserController;
 use Helpers\UriManager;
 
 
-$dbMySQL = new DBMySQL(include("config.php"), true);
+$dbMySQL = new DBMySQL(include("db_config.php"), true);
 DB::set($dbMySQL);
 DB::seed();
 

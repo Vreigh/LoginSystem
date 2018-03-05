@@ -25,4 +25,3 @@
 
 
 <?php include("View/parts/footer.php"); ?>
-

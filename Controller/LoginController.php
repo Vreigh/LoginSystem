@@ -10,14 +10,14 @@ use Controller\UserController;
 
 class LoginController {
     
-    public function __construct() {
+    public function __construct() { // ten kontroler dopuszza tylko niezalogowanych użytkowników
         if(User::isAuth()){
             UriManager::redirect('users');
         }
     }
     
     public function get(){
-        $hideRegister = true;
+        $hideRegister = true; // ktory formularz powinien się domyślnie pokazać
         include("View/welcome.php");
     }
     
@@ -64,7 +64,7 @@ class LoginController {
         if(empty($errors)){
             $origPass = $validated['password'];
             $validated['password'] = User::hash($validated['password']);
-            $validated['is_admin'] = 0;
+            $validated['is_admin'] = 0; // nowy użytkownik domyślnie nie jest adminem
             $user = new User($validated);
             $user->save();
             User::login($validated['email'], $origPass);

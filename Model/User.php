@@ -57,7 +57,7 @@ class User extends Model
         return $sql;
     }
     
-    public static function getTableCreateString(){
+    public static function getTableCreateSql(){
         $sql = "CREATE TABLE IF NOT EXISTS " . self::getTableName() . " (";
         $sql .= " id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,";
         $sql .= " name VARCHAR(50) NOT NULL,";
@@ -109,7 +109,7 @@ class User extends Model
     }
     
     public static function hash($password){
-        return password_hash($password, PASSWORD_DEFAULT);
+        return password_hash($password, PASSWORD_DEFAULT); // tworzenie hashy - dla tego projektu prosty password_hash
     }
     
     public static function getByID($id){

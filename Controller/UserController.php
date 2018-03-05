@@ -4,13 +4,12 @@ namespace Controller;
 
 use Model\User;
 use Helpers\UriManager;
-use Helpers\Helper;
 use Helpers\GUMP;
 use Database\DB;
 
 class UserController {
     
-    public function __construct() {
+    public function __construct() { // ten kontroler dopuszcza tylko zalogowanych użytkowników
         if(!User::isAuth()){
             UriManager::redirect('');
         }
@@ -36,7 +35,7 @@ class UserController {
            UriManager::redirect('users');
        }
        
-       $old = $user->asArray();
+       $old = $user->asArray(); // domyślne dane w formularzu
        include("View/admin/edit.php");
     }
     
@@ -81,7 +80,7 @@ class UserController {
         $userData = $user->asArray();
         
         if(empty($errors)){
-            if($validated['email'] != $userData['email']){
+            if($validated['email'] != $userData['email']){ // jesli próba zmiany adresu email, ktory jest unikalny:
                 $result = \Database\DB::query('SELECT COUNT(*) FROM ' . User::getTableName() . ' WHERE email = :email', array('email' => $validated['email']));
                 $result = $result->fetch();
                 if((int)$result[0] > 0){
@@ -91,13 +90,13 @@ class UserController {
         }
         
         if(empty($errors)){
-            if(!empty($validated['password'])){
+            if(!empty($validated['password'])){ // jeśli hasło również jest zmieniane
                $origPass = $validated['password'];
                $validated['password'] = User::hash($validated['password']); 
             }else $validated['password'] = $userData['password'];
             
-            if($id != $_SESSION['id']){
-                empty($_POST['is_admin']) ? $validated['is_admin'] = 0 : $validated['is_admin'] = 1;
+            if($id != $_SESSION['id']){ // admin nie może odebrać uprawnień sam sobie
+                empty($_POST['is_admin']) ? $validated['is_admin'] = 0 : $validated['is_admin'] = 1; 
             }else $validated['is_admin'] = $userData['is_admin'];
             
             $user->update($validated);
@@ -110,7 +109,7 @@ class UserController {
     }
     
     public function create(){
-        include("View/admin/create.php");  // czemu tu widok sie sypie?
+        include("View/admin/create.php");  // front-end issue: czemu ta podstrona wyświetla się inaczej? TO DO.
     }
     
     public function post(){
@@ -134,7 +133,7 @@ class UserController {
     
     public function delete(){
        (int)$id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_SPECIAL_CHARS);
-       if(!$id || ($id == $_SESSION['id'])){
+       if(!$id || ($id == $_SESSION['id'])){ // nie mozna usunąć samego siebie.
            UriManager::redirect('users');
        }
        $user = User::getByID($id);
@@ -151,7 +150,7 @@ class UserController {
         UriManager::redirect('');
     }
     
-    public static function tryCreate(){
+    public static function tryCreate(){ 
         $data = array(
             'name' => $_POST['name'],
             'surname' => $_POST['surname'],

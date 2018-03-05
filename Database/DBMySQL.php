@@ -31,7 +31,7 @@ class DBMySQL implements IDatabase
     }
     
     private function buildTables(){
-        $this->query(User::getTableCreateString());
+        $this->query(User::getTableCreateSql());
     }
     
     public function seed(){
