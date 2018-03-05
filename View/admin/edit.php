@@ -4,7 +4,7 @@
     <div class="panel-body">
         <div class="row">
                 <div class="col-lg-12">
-                        <?php include("View/form/user.php") ?>
+                        <?php include("View/admin/form/user.php"); ?>
                 </div>
         </div>
     </div>

@@ -17,13 +17,11 @@ class LoginController {
     }
     
     public function get(){
-        $userFormAction = UriManager::getUrl('register');
         $hideRegister = true;
         include("View/welcome.php");
     }
     
     public function login(){
-        $userFormAction = UriManager::getUrl('register');
         $hideRegister = true;
         
         $data = array(
@@ -56,7 +54,6 @@ class LoginController {
     }
     
     public function register(){
-        $userFormAction = UriManager::getUrl('register');
         $hideLogin = true;
         
         $result = UserController::tryCreate();

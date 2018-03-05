@@ -19,7 +19,7 @@
                                 <div class="row">
                                         <div class="col-lg-12">
                                                 <?php include("form/login.php") ?>
-                                                <?php include("form/user.php") ?>
+                                                <?php include("form/register.php") ?>
                                         </div>
                                 </div>
                         </div>
